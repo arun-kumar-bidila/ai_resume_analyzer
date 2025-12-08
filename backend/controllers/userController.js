@@ -1,6 +1,6 @@
 import { createToken } from "../lib/utils.js";
 import User from "../models/userModel.js";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 
 export const signUp = async (req, res) => {
   try {
@@ -37,6 +37,36 @@ export const signUp = async (req, res) => {
       message: "User created successfully",
       token,
       userData: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const isUser = await User.findOne({ email });
+
+    if (!isUser) {
+      res.json({ success: false, message: "Not an existingUser" });
+    }
+
+    const isMatch = await bcrypt.compare(password, isUser.password);
+
+    if (!isMatch) {
+      res.json({ success: false, message: "Email and password Doesn't match" });
+    }
+
+    const token = createToken(isUser._id);
+
+    res.json({
+      success: true,
+      message: "Login successful",
+      token,
+      userData: isUser,
     });
   } catch (error) {
     console.log(error);

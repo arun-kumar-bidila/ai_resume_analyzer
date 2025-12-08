@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import assets from "../assets/assets";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
-  const [state, setState] = useState("SignUp");
+  const [state, setState] = useState("signup");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const {auth}=useContext(AuthContext);
+
+  const onSubmitHanlder=(event)=>{
+    event.preventDefault();
+    auth(state==="signup"?"signup":"login",{name,email,password})
+    
+  }
+
+
   return (
     <div className="flex flex-row justify-evenly">
       {/* left section*/}
@@ -19,7 +33,7 @@ const Login = () => {
         <div className="px-5 ">
           {/*heading section in left*/}
           <div className="flex flex-col mt-20 gap-5">
-            {state === "SignUp" ? (
+            {state === "signup" ? (
               <p className="text-white font-bold text-5xl">
                 Create Your free account
               </p>
@@ -29,7 +43,7 @@ const Login = () => {
               </p>
             )}
 
-            {state === "SignUp" ? (
+            {state === "signup" ? (
               <p className="text-white text-1xl">
                 Join 10,000+ professional optimizing their careers
               </p>
@@ -40,11 +54,11 @@ const Login = () => {
             )}
           </div>
           {/*form section*/}
-          <form className="mt-5 flex flex-col items-start">
-            {state === "SignUp" && (
+          <form onSubmit={onSubmitHanlder} className="mt-5 flex flex-col items-start">
+            {state === "signup" && (
               <div>
                 <p className="text-white">Name</p>
-                <input
+                <input onChange={(e)=>setName(e.target.value)} value={name}
                   className="border-2 border-black px-2 py-2 items-center rounded-2xl bg-white my-2 w-100"
                   type="text"
                   placeholder="Enter Your Full Name"
@@ -53,27 +67,27 @@ const Login = () => {
             )}
 
             <p className="text-white">Email</p>
-            <input
+            <input onChange={(e)=>setEmail(e.target.value)} value={email}
               className="border-2 border-black px-2 py-2 items-center rounded-2xl bg-white my-2 w-100"
               type="email"
               placeholder="Enter Your Email"
             />
             <p className="text-white">Password</p>
-            <input
+            <input onChange={(e)=>setPassword(e.target.value)} value={password}
               className="border-2 border-black px-2 py-2 items-center rounded-2xl bg-white my-2 w-100"
               type="password"
               placeholder="Enter Your Password"
             />
-            <button className="w-100 mt-10 px-5 py-2 bg-linear-to-br from-[#1F5A5A] to-black rounded-2xl text-white font-medium border border-white">
-              {state === "SignUp" ? "Register" : "Login"}
+            <button type="submit" className="w-100 mt-10 px-5 py-2 bg-linear-to-br from-[#1F5A5A] to-black rounded-2xl text-white font-medium border border-white">
+              {state === "signup" ? "Register" : "Login"}
             </button>
             <div className="mt-5">
-              {state === "SignUp" ? (
+              {state === "signup" ? (
                 <div>
                   <p className="text-white">
                     Already have an Account ?
                     <span
-                      onClick={() => setState("Login")}
+                      onClick={() => setState("login")}
                       className="text-amber-500 font-medium ml-2 cursor-pointer"
                     >
                       Login
@@ -85,7 +99,7 @@ const Login = () => {
                   <p className="text-white">
                     Don't have an Account ?
                     <span
-                      onClick={() => setState("SignUp")}
+                      onClick={() => setState("signup")}
                       className="text-amber-500 font-medium ml-2 cursor-pointer"
                     >
                       Register
